@@ -39,7 +39,7 @@ describe Simplex do
   it 'should detect negative surplus values' do
     #negative surplus values are not permited for a feasible solution
     simplex = Simplex.new( @initial_tableau )
-    simplex.negative_surplus_variables?.should == true
+    simplex.negative_surplus_variables?.should_not be_nil
   end
   
   it 'should count number of variables' do
