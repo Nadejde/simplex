@@ -23,7 +23,8 @@ class Simplex
   end
   
   def negative_surplus_variables?
-    true if @tableau.minor( 0..-2, ( variable_count...-1)).find_index { |value| value < 0 }
+    true if @tableau.minor( 0..-2, ( variable_count...-1))
+            .find_index { |value| value < 0 }
   end
   
   def variable_count
