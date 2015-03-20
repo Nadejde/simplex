@@ -36,10 +36,23 @@ describe Simplex do
     simplex.basic_solution.should == [0, 0 ,0, 40, -10, -10, 0]
   end
   
-  it 'should detect negative surplus values' do
+  it 'should detect negative surplus variables and return firs found row index' do
     #negative surplus values are not permited for a feasible solution
     simplex = Simplex.new( @initial_tableau )
-    simplex.negative_surplus_variables?.should_not be_nil
+    simplex.negative_surplus_variables?.should == 1
+  end
+  
+  it 'should not return row index if no negateive surplus variables' do
+    tableau = 
+    [
+      [1, 1, 1, 1, 0, 0, 0, 40],
+      [2, 1, -1, 0, 1, 0, 0, 10],
+      [0, -1, 1, 0, 0, 1, 0, 10],
+      [-2, -3, -1, 0, 0, 0, 1, 0]
+      ]
+      
+    simplex = Simplex.new( tableau )
+    simplex.negative_surplus_variables?.should be_nil
   end
   
   it 'should count number of variables' do
