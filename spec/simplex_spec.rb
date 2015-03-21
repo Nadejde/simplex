@@ -13,20 +13,20 @@ describe Simplex do
       [1, 1, 1, 1, 0, 0, 0, 40],
       [2, 1, -1, 0, -1, 0, 0, 10],
       [0, -1, 1, 0, 0, -1, 0, 10],
-      [-2, -3, -1, 0, 0, 0, 1, 0]
+      [-2, -3, -1, 0, 0, 0, 1, 0] 
       ]
   end
   
   it 'should exist' do
     class_type = Simplex
     
-    Simplex.class.should == Class
+    expect( Simplex.class ).to eq( Class )
   end
   
   it 'should hold initial tableau in Matrix object' do
     simplex = Simplex.new( @initial_tableau )
     
-    simplex.tableau.should == Matrix.rows( @initial_tableau )
+    expect( simplex.tableau ).to eq( Matrix.rows( @initial_tableau ) )
   end
   
   it 'should calculate basic solution for tableau' do
@@ -36,15 +36,15 @@ describe Simplex do
     # Variable attached to that colum is Ans[rowindex] / column[rowindex]
     simplex = Simplex.new( @initial_tableau )
     
-    simplex.basic_solution.should == [0, 0 ,0, 40, -10, -10, 0]
+    expect( simplex.basic_solution ).to eq( [0, 0 ,0, 40, -10, -10, 0] )
   end
   
-  it 'should detect negative surplus variables and return firs found row index' do
+  it 'should detect negative surplus variables and return row indexes' do
     #negative surplus values are not permited for a feasible solution
     simplex = Simplex.new( @initial_tableau )
     simplex.basic_solution
     
-    simplex.star_rows?.should == [1, 2]
+    expect( simplex.star_rows? ).to eq( [1, 2] )
   end
   
   it 'should not return row index if no negateive surplus variables' do
@@ -58,40 +58,54 @@ describe Simplex do
     simplex = Simplex.new( tableau )
     simplex.basic_solution
     
-    simplex.star_rows?.should be_nil
+    expect( simplex.star_rows? ).to  be_falsey
+  end
+  
+  it 'ignores the block for star_rows? if no star rows exist' do
+    tableau = 
+    [
+      [1, 1, 1, 1, 0, 0, 0, 40],
+      [2, 1, -1, 0, 1, 0, 0, 10],
+      [0, -1, 1, 0, 0, 1, 0, 10],
+      [-2, -3, -1, 0, 0, 0, 1, 0]
+      ]
+    simplex = Simplex.new( tableau )
+    simplex.basic_solution
+    
+    expect( simplex.star_rows? { |rows| rows.count } ).to be_falsey
   end
   
   it 'takes a block with star_rows?' do
     simplex = Simplex.new( @initial_tableau )
     simplex.basic_solution
     
-    simplex.star_rows? { |rows| rows.count }.should == 2
+    expect( simplex.star_rows? { |rows| rows.count } ).to eq( 2 )
   end
   
   it 'should count number of variables' do
     simplex = Simplex.new( @initial_tableau)
     
-    simplex.variable_count.should == 3
+    expect( simplex.variable_count ).to eq( 3 )
   end
   
   it 'should know solution is not feasible while slack variables are negative' do
     simplex = Simplex.new( @initial_tableau )
     simplex.basic_solution #calculate basic solution
     
-    simplex.feasible_solution?.should == false
+    expect( simplex.feasible_solution? ).to be_falsey
   end
   
   it 'should find correct pivot column while slack variables are negative' do
     simplex = Simplex.new( @initial_tableau )
     simplex.basic_solution
     
-    simplex.pivot_column.should == 0
+    expect( simplex.pivot_column ).to eq( 0 )
   end
   
   it 'should find correct pivot row in column' do
     simplex = Simplex.new( @initial_tableau )
     simplex.basic_solution
     
-    simplex.pivot_row.should == 1
+    expect(simplex.pivot_row).to eq( 1 )
   end
 end
