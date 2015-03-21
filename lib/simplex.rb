@@ -98,6 +98,9 @@ class Simplex
   def pivot
     new_tableau = []
     row_index = pivot_row_index
+    
+    return nil if row_index.nil? #if no row index return now with no solution
+    
     column_index = pivot_column_index
     
     @tableau.row_vectors.each_with_index do |row,i|
@@ -118,7 +121,7 @@ class Simplex
   
   def solution
     until feasible_solution?
-      pivot
+      return nil if pivot.nil?
     end
     
     @basic_solution.rotate( -1)[0..variable_count]
