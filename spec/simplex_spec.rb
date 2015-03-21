@@ -119,6 +119,15 @@ describe Simplex do
         [1, 0, 0, 0, -0.5, -0.5, 0, 10],   
         [0, -1, 1, 0, 0, -1, 0, 10],
         [0, -4, 0, 0, -1, -2, 1, 30]]
+    
+    expect( simplex.pivot ).to eq( pivoted_tableau )
+    
+    pivoted_tableau = 
+    Matrix[
+        [0, 1, 0, 0.5, 0.25, 0.75, 0, 10],     
+        [1, 0, 0, 0, -0.5, -0.5, 0, 10],
+        [0, 0, 1, 0.5, 0.25, -0.25, 0, 20],    
+        [0, 0, 0, 2, 0, 1, 1, 70]] 
         
     expect( simplex.pivot ).to eq( pivoted_tableau )
   end
@@ -149,4 +158,46 @@ describe Simplex do
     expect( simplex.pivot_row_index ).to eq( 0 )
   end
   
+  it 'knows solutions is not feasible while negative values on last row' do
+    pivoted_tableau = 
+        [
+        [0, 2, 0, 1, 0.5, 1.5, 0, 20],   
+        [1, 0, 0, 0, -0.5, -0.5, 0, 10],   
+        [0, -1, 1, 0, 0, -1, 0, 10],
+        [0, -4, 0, 0, -1, -2, 1, 30]]
+    simplex = Simplex.new( pivoted_tableau )
+    
+    expect( simplex.feasible_solution? ).to be_falsey
+  end
+  
+   it 'knows feasible solution' do
+    pivoted_tableau = 
+        [
+        [0, 1, 0, 0.5, 0.25, 0.75, 0, 10],     
+        [1, 0, 0, 0, -0.5, -0.5, 0, 10],
+        [0, 0, 1, 0.5, 0.25, -0.25, 0, 20],    
+        [0, 0, 0, 2, 0, 1, 1, 70]] 
+    simplex = Simplex.new( pivoted_tableau )
+    
+    expect( simplex.feasible_solution? ).to be_truthy 
+  end
+  
+  it 'knows solution in final tableau' do
+    pivoted_tableau = 
+        [
+        [0, 1, 0, 0.5, 0.25, 0.75, 0, 10],     
+        [1, 0, 0, 0, -0.5, -0.5, 0, 10],
+        [0, 0, 1, 0.5, 0.25, -0.25, 0, 20],    
+        [0, 0, 0, 2, 0, 1, 1, 70]] 
+    simplex = Simplex.new( pivoted_tableau )
+    
+    expect( simplex.solution ).to eq( [70, 10, 10, 20] )
+  end
+  
+  it 'finds solution' do
+    simplex = Simplex.new( @initial_tableau )
+    
+    #p = 70, x= 10, 7= 10, z= 20
+    expect( simplex.solution ).to eq( [70, 10, 10, 20] )
+  end
 end

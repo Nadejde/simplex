@@ -43,7 +43,8 @@ class Simplex
   end 
   
   def feasible_solution?
-    return false if @basic_solution.find_index { |value| value < 0 }
+    return false if @basic_solution.find_index { |v| v < 0 }
+    return false if @tableau.row(-1)[0..-2].find_index { |v| v < 0 }
     return true
   end
   
@@ -97,8 +98,17 @@ class Simplex
       end
     end
     
+    @tableau = Matrix.rows( new_tableau )
     basic_solution # after pivot compute new basic solution
     
-    @tableau = Matrix.rows( new_tableau )
+    @tableau
+  end
+  
+  def solution
+    until feasible_solution?
+      pivot
+    end
+    
+    @basic_solution.rotate( -1)[0..variable_count]
   end
 end
