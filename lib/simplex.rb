@@ -32,6 +32,7 @@ class Simplex
     end
     
     return nil unless rows.count > 0
+    #return yield(rows)
     return rows
   end
   
@@ -51,14 +52,24 @@ class Simplex
             find_index( @tableau.row( star_rows.first )[0..-2].max )
     end
     
-    return column
+    column
   end
   
   def pivot_row
     column = @tableau.row( pivot_column )
-    #get all rows with min ratio
-    column.min_by(0) { |value| column[-1] / value }
-    #if min ratio is both in starred row and unstarred row use starred row
-    #column.count > 1 ?
+    min_ratio = column.select {|v| v > 0 }
+                  .min_by { |value| column[-1] / value }
+    
+    #if one of the star rows has min ratio return that
+    if star_rows = star_rows?
+      column.each_with_index do |v, i|  
+        return i if v > 0 && 
+                  ( min_ratio == column[-1]  / v ) && 
+                  star_rows.include?( i )
+      end
+    end
+    
+    #if no star rows has min ratio just return first row
+    column.find_index { |v| v > 0 && ( min_ratio == column[-1] / v ) }
   end
 end

@@ -81,10 +81,10 @@ describe Simplex do
     simplex.pivot_column.should == 0
   end
   
-  #it 'should find correct pivot row in column' do
-  #  simplex = Simple.new( @initial_tableau )
-  #  simplex.basic_solution
-  #  
-  #  simplex.pivot_row( simplex.pivot_column ).should == 1
-  #end
+  it 'should find correct pivot row in column' do
+    simplex = Simplex.new( @initial_tableau )
+    simplex.basic_solution
+    
+    simplex.pivot_row.should == 1
+  end
 end
