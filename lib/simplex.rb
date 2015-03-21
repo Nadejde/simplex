@@ -32,7 +32,7 @@ class Simplex
     end
     
     return nil unless rows.count > 0
-    #return yield(rows)
+    return yield(rows) if block_given?
     return rows
   end
   

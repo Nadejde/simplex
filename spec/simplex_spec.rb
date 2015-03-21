@@ -61,6 +61,13 @@ describe Simplex do
     simplex.star_rows?.should be_nil
   end
   
+  it 'takes a block with star_rows?' do
+    simplex = Simplex.new( @initial_tableau )
+    simplex.basic_solution
+    
+    simplex.star_rows? { |rows| rows.count }.should == 2
+  end
+  
   it 'should count number of variables' do
     simplex = Simplex.new( @initial_tableau)
     
