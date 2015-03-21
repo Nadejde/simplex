@@ -5,6 +5,8 @@ class Simplex
     
   def initialize( initial_tableau )
     @tableau = Matrix.rows( initial_tableau )
+    
+    basic_solution #figure out first basic solution
   end
     
   def basic_solution 
@@ -45,7 +47,7 @@ class Simplex
     return true
   end
   
-  def pivot_column
+  def pivot_column_index
     column = nil
     
     star_rows? do |rows|
@@ -57,8 +59,8 @@ class Simplex
     column
   end
   
-  def pivot_row
-    column = @tableau.row( pivot_column )
+  def pivot_row_index
+    column = @tableau.row( pivot_column_index )
     min_ratio = column.select {|v| v > 0 }
                   .min_by { |value| column[-1] / value }
     
@@ -73,5 +75,23 @@ class Simplex
     
     #if no star rows has min ratio just return first row
     column.find_index { |v| v > 0 && ( min_ratio == column[-1] / v ) }
+  end
+  
+  def pivot
+    new_tableau = []
+    row_index = pivot_row_index
+    column_index = pivot_column_index
+    
+    @tableau.row_vectors.each_with_index do |row,i|
+      if row[column_index] == 0
+        new_tableau << row.to_a 
+      elsif i == row_index
+        new_tableau << ( row / @tableau[row_index, column_index] ).to_a
+      else
+        new_tableau << ( row  - @tableau.row( row_index ) / @tableau[row_index, column_index] * @tableau[i, column_index] ).to_a
+      end
+    end
+    
+    @tableau = Matrix.rows( new_tableau )
   end
 end
