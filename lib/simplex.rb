@@ -67,32 +67,32 @@ class Simplex
   end
   
   def pivot_row_index
-    column = @tableau.column( pivot_column_index )
+    column_index = pivot_column_index
     min_ratio = nil
+    row_index = nil
     
-    column.each_with_index do |v, i|
-      next if v <= 0
-      ratio = @tableau[i,-1] / v
+    @tableau.row_vectors.each_with_index do |row, i|
+      next if row[column_index] <= 0
+      ratio = row[-1] / row[column_index]
       min_ratio ||= ratio
-      min_ratio = min_ratio > ratio ? ratio : min_ratio
+      row_index ||= i
+      if min_ratio > ratio
+        min_ratio = ratio
+        row_index = i
+      end
     end
     
     #if one of the star rows has min ratio return that
     star_rows? do |rows|
-      column.each_with_index do |v, i|  
-        return i if v > 0 && 
-                  ( min_ratio ==  @tableau[i,-1]  / v ) && 
+       @tableau.row_vectors.each_with_index do |row, i|  
+        return i if row[column_index] > 0 && 
+                  ( min_ratio ==  row[-1]  / row[column_index] ) && 
                   rows.include?( i )
       end
     end
     
     #if no star rows has min ratio just return first row
-    column.each_with_index do |v, i|
-      next if v <= 0
-      ratio = @tableau[i,-1] / v
-      return i if ratio == min_ratio
-    end
-    
+   row_index
   end
   
   def pivot
