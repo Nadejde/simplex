@@ -46,10 +46,12 @@ class Simplex
   end
   
   def pivot_column
-    if star_rows = star_rows?
+    column = nil
+    
+    star_rows? do |rows|
       #ignore last column (ans)
-      column = @tableau.row( star_rows.first ).
-            find_index( @tableau.row( star_rows.first )[0..-2].max )
+      column = @tableau.row( rows.first ).
+            find_index( @tableau.row( rows.first )[0..-2].max )
     end
     
     column
@@ -61,11 +63,11 @@ class Simplex
                   .min_by { |value| column[-1] / value }
     
     #if one of the star rows has min ratio return that
-    if star_rows = star_rows?
+    star_rows? do |rows|
       column.each_with_index do |v, i|  
         return i if v > 0 && 
                   ( min_ratio == column[-1]  / v ) && 
-                  star_rows.include?( i )
+                  rows.include?( i )
       end
     end
     
