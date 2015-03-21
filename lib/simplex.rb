@@ -24,10 +24,15 @@ class Simplex
     @basic_solution 
   end
   
-  def star_row?
+  def star_rows?
+    rows = []
     #looks for negative surpluss values and returns first row
-    return nil unless column = @basic_solution.find_index { |value| value < 0 }
-    found_index = @tableau.column( column ).find_index { |value| value != 0}
+    @basic_solution.each_with_index do |value, index|
+      rows << @tableau.column(index).find_index { |cv| cv != 0 } if value < 0
+    end
+    
+    return nil unless rows.count > 0
+    return rows
   end
   
   def variable_count
@@ -40,12 +45,20 @@ class Simplex
   end
   
   def pivot_column
-    if star_row = star_row?
+    if star_rows = star_rows?
       #ignore last column (ans)
-      column = @tableau.row( star_row ).
-            find_index( @tableau.row( star_row )[0..-2].max )
+      column = @tableau.row( star_rows.first ).
+            find_index( @tableau.row( star_rows.first )[0..-2].max )
     end
     
     return column
+  end
+  
+  def pivot_row
+    column = @tableau.row( pivot_column )
+    #get all rows with min ratio
+    column.min_by(0) { |value| column[-1] / value }
+    #if min ratio is both in starred row and unstarred row use starred row
+    #column.count > 1 ?
   end
 end

@@ -44,7 +44,7 @@ describe Simplex do
     simplex = Simplex.new( @initial_tableau )
     simplex.basic_solution
     
-    simplex.star_row?.should == 1
+    simplex.star_rows?.should == [1, 2]
   end
   
   it 'should not return row index if no negateive surplus variables' do
@@ -58,7 +58,7 @@ describe Simplex do
     simplex = Simplex.new( tableau )
     simplex.basic_solution
     
-    simplex.star_row?.should be_nil
+    simplex.star_rows?.should be_nil
   end
   
   it 'should count number of variables' do
@@ -84,7 +84,7 @@ describe Simplex do
   #it 'should find correct pivot row in column' do
   #  simplex = Simple.new( @initial_tableau )
   #  simplex.basic_solution
-    
+  #  
   #  simplex.pivot_row( simplex.pivot_column ).should == 1
   #end
 end
