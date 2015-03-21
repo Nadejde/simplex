@@ -200,4 +200,25 @@ describe Simplex do
     #p = 70, x= 10, 7= 10, z= 20
     expect( simplex.solution ).to eq( [70, 10, 10, 20] )
   end
+  
+  it 'finds solution for standard problem' do
+     pivoted_tableau = 
+        [
+          [4, -3, 1, 1,  0,  0,  0, 3],     
+          [1, 1, 1, 0, 1, 0, 0, 10],     
+          [2, 1, -1, 0, 0, 1, 0, 10],     
+          [-2, 3, -4, 0, 0, 0, 1, 0]]
+          
+    converted_tableau = 
+        [
+          [4.0, -3.0, 1.0, 1.0,  0.0,  0.0,  0.0, 3.0],     
+          [1.0, 1.0, 1.0, 0.0, 1.0, 0.0, 0.0, 10.0],     
+          [2.0, 1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 10.0],     
+          [-2.0, 3.0, -4.0, 0.0, 0.0, 0.0, 1.0, 0.0]]
+          
+    simplex = Simplex.new( converted_tableau ) 
+    
+    
+    expect( simplex.solution ).to eq( [27.75, 0, 1.75, 8.25] )
+  end
 end

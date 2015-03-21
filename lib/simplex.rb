@@ -5,6 +5,7 @@ class Simplex
     
   def initialize( initial_tableau )
     @tableau = Matrix.rows( initial_tableau )
+    #@tableau = @tableau.map( &:to_r) #convert all to rational 
     
     basic_solution #figure out first basic solution
   end
@@ -49,38 +50,49 @@ class Simplex
   end
   
   def pivot_column_index
-    column = nil
+    column_index = nil
     
     star_rows? do |rows|
       #ignore last column (ans)
-      column = @tableau.row( rows.first ).
+      column_index = @tableau.row( rows.first ).
             find_index( @tableau.row( rows.first )[0..-2].max )
     end
     
     #if no star rows pick pivot column the standard way
-      column = @tableau.row(-1).find_index( 
+      column_index = @tableau.row(-1).find_index( 
                   @tableau.row( -1 )[0..-2].
-                  select { |v| v < 0 } .min() ) unless column
+                  select { |v| v < 0 } .min() ) unless column_index
     
-    column
+    column_index
   end
   
   def pivot_row_index
-    column = @tableau.row( pivot_column_index )
-    min_ratio = column.select {|v| v > 0 }
-                  .min_by { |value| column[-1] / value }
+    column = @tableau.column( pivot_column_index )
+    min_ratio = nil
+    
+    column.each_with_index do |v, i|
+      next if v <= 0
+      ratio = @tableau[i,-1] / v
+      min_ratio ||= ratio
+      min_ratio = min_ratio > ratio ? ratio : min_ratio
+    end
     
     #if one of the star rows has min ratio return that
     star_rows? do |rows|
       column.each_with_index do |v, i|  
         return i if v > 0 && 
-                  ( min_ratio == column[-1]  / v ) && 
+                  ( min_ratio ==  @tableau[i,-1]  / v ) && 
                   rows.include?( i )
       end
     end
     
     #if no star rows has min ratio just return first row
-    column.find_index { |v| v > 0 && ( min_ratio == column[-1] / v ) }
+    column.each_with_index do |v, i|
+      next if v <= 0
+      ratio = @tableau[i,-1] / v
+      return i if ratio == min_ratio
+    end
+    
   end
   
   def pivot
