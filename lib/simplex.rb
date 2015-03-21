@@ -56,6 +56,11 @@ class Simplex
             find_index( @tableau.row( rows.first )[0..-2].max )
     end
     
+    #if no star rows pick pivot column the standard way
+      column = @tableau.row(-1).find_index( 
+                  @tableau.row( -1 )[0..-2].
+                  select { |v| v < 0 } .min() ) unless column
+    
     column
   end
   
@@ -91,6 +96,8 @@ class Simplex
         new_tableau << ( row  - @tableau.row( row_index ) / @tableau[row_index, column_index] * @tableau[i, column_index] ).to_a
       end
     end
+    
+    basic_solution # after pivot compute new basic solution
     
     @tableau = Matrix.rows( new_tableau )
   end

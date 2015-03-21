@@ -102,13 +102,51 @@ describe Simplex do
     expect( simplex.pivot_row_index ).to eq( 1 )
   end
   
-  it 'should pivot ' do
-    pivoted_tableau = Matrix[[0.0, 0.5, 1.5, 1.0, 0.5, 0.0, 0.0, 35.0], [1.0, 0.5, -0.5, 0.0, -0.5, 0.0, 0.0, 5.0], [0.0, -1.0, 1.0, 0.0, 0.0, -1.0, 0.0, 10.0], [0.0, -2.0, -2.0, 0.0, -1.0, 0.0, 1.0, 10.0]]
-    
+  it 'should pivot' do
+    pivoted_tableau = 
+    Matrix[
+        [0.0, 0.5, 1.5, 1.0, 0.5, 0.0, 0.0, 35.0], 
+        [1.0, 0.5, -0.5, 0.0, -0.5, 0.0, 0.0, 5.0], 
+        [0.0, -1.0, 1.0, 0.0, 0.0, -1.0, 0.0, 10.0], 
+        [0.0, -2.0, -2.0, 0.0, -1.0, 0.0, 1.0, 10.0]]
     simplex = Simplex.new( @initial_tableau )
     
     expect( simplex.pivot ).to eq( pivoted_tableau )
 
+    pivoted_tableau = 
+    Matrix[
+        [0, 2, 0, 1, 0.5, 1.5, 0, 20],   
+        [1, 0, 0, 0, -0.5, -0.5, 0, 10],   
+        [0, -1, 1, 0, 0, -1, 0, 10],
+        [0, -4, 0, 0, -1, -2, 1, 30]]
+        
+    expect( simplex.pivot ).to eq( pivoted_tableau )
+  end
+  
+  it 'should find correct pivot column if no negative slack variables' do
+    pivoted_tableau = 
+        [
+        [0, 2, 0, 1, 0.5, 1.5, 0, 20],   
+        [1, 0, 0, 0, -0.5, -0.5, 0, 10],   
+        [0, -1, 1, 0, 0, -1, 0, 10],
+        [0, -4, 0, 0, -1, -2, 1, 30]]
+        
+    simplex = Simplex.new( pivoted_tableau )
+    
+    expect( simplex.pivot_column_index ).to eq( 1 )
+  end
+  
+  it 'should find correct pivot row if no negative slack variables' do
+    pivoted_tableau = 
+        [
+        [0, 2, 0, 1, 0.5, 1.5, 0, 20],   
+        [1, 0, 0, 0, -0.5, -0.5, 0, 10],   
+        [0, -1, 1, 0, 0, -1, 0, 10],
+        [0, -4, 0, 0, -1, -2, 1, 30]]
+        
+    simplex = Simplex.new( pivoted_tableau )
+    
+    expect( simplex.pivot_row_index ).to eq( 0 )
   end
   
 end
