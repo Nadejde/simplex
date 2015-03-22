@@ -2,10 +2,12 @@ require 'matrix'
 
 class Simplex
   attr_accessor :tableau
-    
+  attr_accessor :max_cycles
+  
   def initialize( initial_tableau )
     @tableau = Matrix.rows( initial_tableau )
     #@tableau = @tableau.map( &:to_r) #convert all to rational 
+    @max_cycles = 10000
     
     basic_solution #figure out first basic solution
   end
@@ -120,8 +122,13 @@ class Simplex
   end
   
   def solution
+    count = 0
     until feasible_solution?
+      #puts "#{@tableau.to_a.to_s}"
+      #puts "#{pivot_column_index} #{pivot_row_index}"
       return nil if pivot.nil?
+      count += 1
+      break if count > @max_cycles
     end
     
     @basic_solution.rotate( -1)[0..variable_count]
