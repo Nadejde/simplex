@@ -41,6 +41,7 @@ You can then call solution to get the solution:
 simplex.solution
  => [70.0, 10.0, 10.0, 20.0] 
  ```
+ p = 70, x = 10, y = 10, z = 20
  
 You can also do it step by step by calling pivot:
 ```
