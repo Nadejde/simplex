@@ -6,7 +6,7 @@ class Simplex
   
   def initialize( initial_tableau )
     @tableau = Matrix.rows( initial_tableau )
-    #@tableau = @tableau.map( &:to_r) #convert all to rational 
+    @tableau = @tableau.map{ |v| Float( v ) } #convert all to rational 
     @max_cycles = 10000
     
     basic_solution #figure out first basic solution
