@@ -61,10 +61,10 @@ class Simplex
     end
     
     #if no star rows pick pivot column the standard way
-      column_index = @tableau.row(-1).find_index( 
-                  @tableau.row( -1 )[0..-2].
-                  select { |v| v < 0 } .min() ) unless column_index
-    
+    column_index = @tableau.row(-1).find_index( 
+                @tableau.row( -1 )[0..-2].
+                select { |v| v < 0 } .min() ) unless column_index
+  
     column_index
   end
   
@@ -124,13 +124,11 @@ class Simplex
   def solution
     count = 0
     until feasible_solution?
-      #puts "#{@tableau.to_a.to_s}"
-      #puts "#{pivot_column_index} #{pivot_row_index}"
       return nil if pivot.nil?
       count += 1
       break if count > @max_cycles
     end
     
-    @basic_solution.rotate( -1)[0..variable_count]
+    @basic_solution.rotate( -1 )[0..variable_count]
   end
 end
