@@ -7,6 +7,7 @@ You can use this class to solve linear programming problems. Example of problem:
 
 p = 2x + 3y + z
 x + y + z <= 40
+
 2x + y - z => 10
 -y + z => 10
 x => 0, y => 0, z => 0
