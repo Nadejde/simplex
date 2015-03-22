@@ -2,12 +2,18 @@
 Implementation of the Simplex algorithm. Solves all types of linear programming problems, including non standard.
 
 # Using Simplex:
+
 You can use this class to solve linear programming problems. Example of problem:
+
 p = 2x + 3y + z
-x + y + z <= 40 
-2x + y - z => 10 
-- y + z => 10 
-x => 0, y => 0, z => 0 
+
+x + y + z <= 40
+
+2x + y - z => 10
+
+-y + z => 10
+
+x => 0, y => 0, z => 0
 
 You will need to do some work yourself and generate the initial tableau. Example for the problem above:
 [
