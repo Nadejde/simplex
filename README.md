@@ -6,13 +6,9 @@ Implementation of the Simplex algorithm. Solves all types of linear programming 
 You can use this class to solve linear programming problems. Example of problem:
 
 p = 2x + 3y + z
-
 x + y + z <= 40
-
 2x + y - z => 10
-
 -y + z => 10
-
 x => 0, y => 0, z => 0
 
 You will need to do some work yourself and generate the initial tableau. Example for the problem above:
@@ -20,7 +16,7 @@ You will need to do some work yourself and generate the initial tableau. Example
 [1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 40.0],
 [2.0, 1.0, -1.0, 0.0, -1.0, 0.0, 0.0, 10.0],
 [0.0, -1.0, 1.0, 0.0, 0.0, -1.0, 0.0, 10.0],
-[-2.0, -3.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0] 
+[-2.0, -3.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0]
 ]
 
 Instantiate Simplex like this:
