@@ -129,6 +129,6 @@ class Simplex
       break if count > @max_cycles
     end
     
-    @basic_solution.rotate( -1 )[0..variable_count]
+    @basic_solution.rotate( -1 )[0..variable_count].map { |v| v.round( 2 ) }
   end
 end

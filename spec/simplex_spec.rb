@@ -249,6 +249,6 @@ describe Simplex do
       ]
     simplex = Simplex.new( tableau )
     
-    expect( simplex.solution ).to eq( [-8.343053915781182, 1.8121212121212125, 4.430932703659976, 0.4999999999999999, 0.1, 0.5,  1.0]  )
+    expect( simplex.solution ).to eq( [-8.34, 1.81, 4.43, 0.5, 0.1, 0.5, 1.0]  )
   end
 end
