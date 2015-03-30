@@ -5,8 +5,7 @@ class Simplex
   attr_accessor :max_cycles
   
   def initialize( initial_tableau )
-    @tableau = Matrix.rows( initial_tableau )
-    @tableau = @tableau.map{ |v| Float( v ) } #convert all to rational 
+    @tableau = Matrix.rows( initial_tableau ).map { |v| Float( v ) }
     @max_cycles = 10000
     
     basic_solution #figure out first basic solution
@@ -111,7 +110,9 @@ class Simplex
       elsif i == row_index
         new_tableau << ( row / @tableau[row_index, column_index] ).to_a
       else
-        new_tableau << ( row  - @tableau.row( row_index ) / @tableau[row_index, column_index] * @tableau[i, column_index] ).to_a
+        new_tableau << ( row  - @tableau.row( row_index ) / 
+                        @tableau[row_index, column_index] * 
+                        @tableau[i, column_index] ).to_a
       end
     end
     

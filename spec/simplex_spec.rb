@@ -251,4 +251,5 @@ describe Simplex do
     
     expect( simplex.solution ).to eq( [-8.34, 1.81, 4.43, 0.5, 0.1, 0.5, 1.0]  )
   end
+
 end
