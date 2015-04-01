@@ -20,13 +20,13 @@ describe Simplex do
   it 'should exist' do
     class_type = Simplex
     
-    expect( Simplex.class ).to eq( Class )
+    expect(Simplex.class).to eq(Class)
   end
   
   it 'should hold initial tableau in Matrix object' do
-    simplex = Simplex.new( @initial_tableau )
+    simplex = Simplex.new(@initial_tableau)
     
-    expect( simplex.tableau ).to eq( Matrix.rows( @initial_tableau ) )
+    expect(simplex.tableau).to eq(Matrix.rows(@initial_tableau))
   end
   
   it 'should calculate basic solution for tableau' do
@@ -34,16 +34,16 @@ describe Simplex do
     # with only one value != 0. 
     # Get row index for that one value.
     # Variable attached to that colum is Ans[rowindex] / column[rowindex]
-    simplex = Simplex.new( @initial_tableau )
+    simplex = Simplex.new(@initial_tableau)
     
-    expect( simplex.basic_solution ).to eq( [0.0, 0.0 ,0.0, 40.0, -10.0, -10.0, 0.0] )
+    expect(simplex.basic_solution).to eq([0.0, 0.0 ,0.0, 40.0, -10.0, -10.0, 0.0])
   end
   
   it 'should detect negative surplus variables and return row indexes' do
     #negative surplus values are not permited for a feasible solution
-    simplex = Simplex.new( @initial_tableau )
+    simplex = Simplex.new(@initial_tableau)
     
-    expect( simplex.star_rows? ).to eq( [1, 2] )
+    expect(simplex.star_rows?).to eq([1, 2])
   end
   
   it 'should not return row index if no negateive surplus variables' do
@@ -54,9 +54,9 @@ describe Simplex do
       [0.0, -1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 10.0],
       [-2.0, -3.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0]
       ]
-    simplex = Simplex.new( tableau )
+    simplex = Simplex.new(tableau)
     
-    expect( simplex.star_rows? ).to  be_falsey
+    expect(simplex.star_rows?).to  be_falsey
   end
   
   it 'ignores the block for star_rows? if no star rows exist' do
@@ -67,39 +67,39 @@ describe Simplex do
       [0.0, -1.0, 1.0, 0.0, 0.0, 1.0, 0.0, 10.0],
       [-2.0, -3.0, -1.0, 0.0, 0.0, 0.0, 1.0, 0.0]
       ]
-    simplex = Simplex.new( tableau )
+    simplex = Simplex.new(tableau)
     
-    expect( simplex.star_rows? { |rows| rows.count } ).to be_falsey
+    expect(simplex.star_rows? { |rows| rows.count }).to be_falsey
   end
   
   it 'takes a block with star_rows?' do
-    simplex = Simplex.new( @initial_tableau )
+    simplex = Simplex.new(@initial_tableau)
     
-    expect( simplex.star_rows? { |rows| rows.count } ).to eq( 2 )
+    expect(simplex.star_rows? { |rows| rows.count }).to eq(2)
   end
   
   it 'should count number of variables' do
-    simplex = Simplex.new( @initial_tableau)
+    simplex = Simplex.new(@initial_tableau)
     
-    expect( simplex.variable_count ).to eq( 3 )
+    expect(simplex.variable_count).to eq(3)
   end
   
   it 'should know solution is not feasible while slack variables are negative' do
-    simplex = Simplex.new( @initial_tableau )
+    simplex = Simplex.new(@initial_tableau)
     
-    expect( simplex.feasible_solution? ).to be_falsey
+    expect(simplex.feasible_solution?).to be_falsey
   end
   
   it 'should find correct pivot column while slack variables are negative' do
-    simplex = Simplex.new( @initial_tableau )
+    simplex = Simplex.new(@initial_tableau)
     
-    expect( simplex.pivot_column_index ).to eq( 0 )
+    expect(simplex.pivot_column_index).to eq(0)
   end
   
   it 'should find correct pivot row in column' do
-    simplex = Simplex.new( @initial_tableau )
+    simplex = Simplex.new(@initial_tableau)
     
-    expect( simplex.pivot_row_index ).to eq( 1 )
+    expect(simplex.pivot_row_index).to eq(1)
   end
   
   it 'should pivot' do
@@ -109,9 +109,9 @@ describe Simplex do
         [1.0, 0.5, -0.5, 0.0, -0.5, 0.0, 0.0, 5.0], 
         [0.0, -1.0, 1.0, 0.0, 0.0, -1.0, 0.0, 10.0], 
         [0.0, -2.0, -2.0, 0.0, -1.0, 0.0, 1.0, 10.0]]
-    simplex = Simplex.new( @initial_tableau )
+    simplex = Simplex.new(@initial_tableau)
     
-    expect( simplex.pivot ).to eq( pivoted_tableau )
+    expect(simplex.pivot).to eq(pivoted_tableau)
 
     pivoted_tableau = 
     Matrix[
@@ -120,7 +120,7 @@ describe Simplex do
         [0, -1, 1, 0, 0, -1, 0, 10],
         [0, -4, 0, 0, -1, -2, 1, 30]]
     
-    expect( simplex.pivot ).to eq( pivoted_tableau )
+    expect(simplex.pivot).to eq(pivoted_tableau)
     
     pivoted_tableau = 
     Matrix[
@@ -129,7 +129,7 @@ describe Simplex do
         [0, 0, 1, 0.5, 0.25, -0.25, 0, 20],    
         [0, 0, 0, 2, 0, 1, 1, 70]] 
         
-    expect( simplex.pivot ).to eq( pivoted_tableau )
+    expect(simplex.pivot).to eq(pivoted_tableau)
   end
   
   it 'should find correct pivot column if no negative slack variables' do
@@ -140,9 +140,9 @@ describe Simplex do
         [0, -1, 1, 0, 0, -1, 0, 10],
         [0, -4, 0, 0, -1, -2, 1, 30]]
         
-    simplex = Simplex.new( pivoted_tableau )
+    simplex = Simplex.new(pivoted_tableau)
     
-    expect( simplex.pivot_column_index ).to eq( 1 )
+    expect(simplex.pivot_column_index).to eq(1)
   end
   
   it 'should find correct pivot row if no negative slack variables' do
@@ -153,9 +153,9 @@ describe Simplex do
         [0, -1, 1, 0, 0, -1, 0, 10],
         [0, -4, 0, 0, -1, -2, 1, 30]]
         
-    simplex = Simplex.new( pivoted_tableau )
+    simplex = Simplex.new(pivoted_tableau)
     
-    expect( simplex.pivot_row_index ).to eq( 0 )
+    expect(simplex.pivot_row_index).to eq(0)
   end
   
   it 'knows solutions is not feasible while negative values on last row' do
@@ -165,9 +165,9 @@ describe Simplex do
         [1, 0, 0, 0, -0.5, -0.5, 0, 10],   
         [0, -1, 1, 0, 0, -1, 0, 10],
         [0, -4, 0, 0, -1, -2, 1, 30]]
-    simplex = Simplex.new( pivoted_tableau )
+    simplex = Simplex.new(pivoted_tableau)
     
-    expect( simplex.feasible_solution? ).to be_falsey
+    expect(simplex.feasible_solution?).to be_falsey
   end
   
    it 'knows feasible solution' do
@@ -177,9 +177,9 @@ describe Simplex do
         [1, 0, 0, 0, -0.5, -0.5, 0, 10],
         [0, 0, 1, 0.5, 0.25, -0.25, 0, 20],    
         [0, 0, 0, 2, 0, 1, 1, 70]] 
-    simplex = Simplex.new( pivoted_tableau )
+    simplex = Simplex.new(pivoted_tableau)
     
-    expect( simplex.feasible_solution? ).to be_truthy 
+    expect(simplex.feasible_solution?).to be_truthy 
   end
   
   it 'knows solution in final tableau' do
@@ -189,16 +189,16 @@ describe Simplex do
         [1, 0, 0, 0, -0.5, -0.5, 0, 10],
         [0, 0, 1, 0.5, 0.25, -0.25, 0, 20],    
         [0, 0, 0, 2, 0, 1, 1, 70]] 
-    simplex = Simplex.new( pivoted_tableau )
+    simplex = Simplex.new(pivoted_tableau)
     
-    expect( simplex.solution ).to eq( [70, 10, 10, 20] )
+    expect(simplex.solution).to eq([70, 10, 10, 20])
   end
   
   it 'finds solution' do
-    simplex = Simplex.new( @initial_tableau )
+    simplex = Simplex.new(@initial_tableau)
     
     #p = 70, x= 10, 7= 10, z= 20
-    expect( simplex.solution ).to eq( [70, 10, 10, 20] )
+    expect(simplex.solution).to eq([70, 10, 10, 20])
   end
   
   it 'finds solution for standard problem' do
@@ -216,9 +216,9 @@ describe Simplex do
           [2.0, 1.0, -1.0, 0.0, 0.0, 1.0, 0.0, 10.0],     
           [-2.0, 3.0, -4.0, 0.0, 0.0, 0.0, 1.0, 0.0]]
           
-    simplex = Simplex.new( converted_tableau ) 
+    simplex = Simplex.new(converted_tableau) 
     
-    expect( simplex.solution ).to eq( [27.75, 0, 1.75, 8.25] )
+    expect(simplex.solution).to eq([27.75, 0, 1.75, 8.25])
   end
   
   it 'returns nil solution for unbound problems' do
@@ -227,9 +227,9 @@ describe Simplex do
       [4, 0, 0, 1, 16],
       [-4, -6, 0, 0, 0]
       ]
-    simplex = Simplex.new( tableau )
+    simplex = Simplex.new(tableau)
     
-    expect( simplex.solution ).to be_nil
+    expect(simplex.solution).to be_nil
   end
   
   it 'solves Sefans complex food problem' do
@@ -247,9 +247,9 @@ describe Simplex do
       [ 0.0,  0.0,   0.0,    0.0,   0.0,  1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1.0,  0.0,  1.0],
       [-1.0, -1.0,  -1.0,   -1.0,  -1.0, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0,  0.0],
       ]
-    simplex = Simplex.new( tableau )
+    simplex = Simplex.new(tableau)
     
-    expect( simplex.solution ).to eq( [-8.34, 1.81, 4.43, 0.5, 0.1, 0.5, 1.0]  )
+    expect(simplex.solution).to eq([-8.34, 1.81, 4.43, 0.5, 0.1, 0.5, 1.0] )
   end
 
 end
