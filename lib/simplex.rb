@@ -4,8 +4,8 @@ class Simplex
   attr_accessor :tableau
   attr_accessor :max_cycles
   
-  def initialize( initial_tableau )
-    @tableau = Matrix.rows( initial_tableau ).map { |v| Float( v ) }
+  def initialize(initial_tableau)
+    @tableau = Matrix.rows(initial_tableau).map { |v| Float( v ) }
     @max_cycles = 10000
     
     basic_solution #figure out first basic solution
@@ -55,14 +55,14 @@ class Simplex
     
     star_rows? do |rows|
       #ignore last column (ans)
-      column_index = @tableau.row( rows.first ).
-            find_index( @tableau.row( rows.first )[0..-2].max )
+      column_index = @tableau.row(rows.first).
+            find_index(@tableau.row(rows.first)[0..-2].max)
     end
     
     #if no star rows pick pivot column the standard way
     column_index = @tableau.row(-1).find_index( 
-                @tableau.row( -1 )[0..-2].
-                select { |v| v < 0 } .min() ) unless column_index
+                @tableau.row(-1)[0..-2].
+                select { |v| v < 0 } .min()) unless column_index
   
     column_index
   end
@@ -87,8 +87,8 @@ class Simplex
     star_rows? do |rows|
        @tableau.row_vectors.each_with_index do |row, i|  
         return i if row[column_index] > 0 && 
-                  ( min_ratio ==  row[-1]  / row[column_index] ) && 
-                  rows.include?( i )
+                  (min_ratio ==  row[-1]  / row[column_index]) && 
+                  rows.include?(i)
       end
     end
     
@@ -108,15 +108,15 @@ class Simplex
       if row[column_index] == 0
         new_tableau << row.to_a 
       elsif i == row_index
-        new_tableau << ( row / @tableau[row_index, column_index] ).to_a
+        new_tableau << (row / @tableau[row_index, column_index]).to_a
       else
-        new_tableau << ( row  - @tableau.row( row_index ) / 
+        new_tableau << (row  - @tableau.row(row_index) / 
                         @tableau[row_index, column_index] * 
-                        @tableau[i, column_index] ).to_a
+                        @tableau[i, column_index]).to_a
       end
     end
     
-    @tableau = Matrix.rows( new_tableau )
+    @tableau = Matrix.rows(new_tableau)
     basic_solution # after pivot compute new basic solution
     
     @tableau
@@ -130,6 +130,6 @@ class Simplex
       break if count > @max_cycles
     end
     
-    @basic_solution.rotate( -1 )[0..variable_count].map { |v| v.round( 2 ) }
+    @basic_solution.rotate(-1)[0..variable_count].map { |v| v.round(2) }
   end
 end
