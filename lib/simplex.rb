@@ -3,11 +3,11 @@ require 'matrix'
 class Simplex
   attr_accessor :tableau
   attr_accessor :max_cycles
+  attr_accessor :count
   
   def initialize(initial_tableau)
     @tableau = Matrix.rows(initial_tableau).map { |v| Float( v ) }
     @max_cycles = 10000
-    @polarity = initial_tableau[-1][-2] # if -1 then minimisation problem
     
     basic_solution #figure out first basic solution
   end
@@ -32,7 +32,7 @@ class Simplex
   def star_rows?
     rows = []
     #looks for negative surpluss values and returns first row
-    @basic_solution[0..-2].each_with_index do |value, index|
+    @basic_solution.each_with_index do |value, index|
       rows << @tableau.column(index).find_index { |cv| cv != 0 } if value < 0
     end
     
@@ -46,9 +46,8 @@ class Simplex
   end 
   
   def feasible_solution?
-    #return false if @basic_solution.find_index { |v| v < 0 }
-    return false if star_rows?
-    return false if @tableau.row(-1)[0..-2].find_index { |v| v * @polarity < 0 }
+    return false if @basic_solution.find_index { |v| v < 0 }
+    return false if @tableau.row(-1)[0..-2].find_index { |v| v < 0 }
     return true
   end
   
@@ -125,10 +124,10 @@ class Simplex
   end
   
   def solution
-    count = 0
+    @count = 0
     until feasible_solution?
       return nil if pivot.nil?
-      count += 1
+      @count += 1
       break if count > @max_cycles
     end
     
