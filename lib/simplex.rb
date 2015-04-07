@@ -45,7 +45,7 @@ class Simplex
   end 
   
   def feasible_solution?
-    return false if @basic_solution.find_index { |v| v < 0 }
+    #return false if @basic_solution.find_index { |v| v < 0 }
     return false if @tableau.row(-1)[0..-2].find_index { |v| v < 0 }
     return true
   end
