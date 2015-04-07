@@ -221,17 +221,6 @@ describe Simplex do
     expect(simplex.solution).to eq([27.75, 0, 1.75, 8.25])
   end
   
-  it 'returns nil solution for unbound problems' do
-    tableau = [
-      [2, -2, 1, 0, 6],
-      [4, 0, 0, 1, 16],
-      [-4, -6, 0, 0, 0]
-      ]
-    simplex = Simplex.new(tableau)
-    
-    expect(simplex.solution).to be_nil
-  end
-  
   it 'solves Sefans complex food problem' do
     tableau = [
       [ 4.1,  7.7,  12.6,    5.4,   7.7,  3.7, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 27.1],
