@@ -4,10 +4,12 @@ class Simplex
   attr_accessor :tableau
   attr_accessor :max_cycles
   attr_accessor :count
+  attr_accessor :precision
   
-  def initialize(initial_tableau)
+  def initialize(initial_tableau, max_cycles: 10000, precision: 0.01)
     @tableau = Matrix.rows(initial_tableau).map { |v| Float( v ) }
-    @max_cycles = 10000
+    @max_cycles = max_cycles
+    @precision = precision
     
     basic_solution #figure out first basic solution
   end

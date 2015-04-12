@@ -251,5 +251,17 @@ describe Simplex do
     
     expect(simplex.solution).to eq([-8.34, 1.81, 4.43, 0.5, 0.1, 0.5, 1.0] )
   end
+  
+  it 'should take block for settings' do
+    tableau = [
+      [2, -2, 1, 0, 6],
+      [4, 0, 0, 1, 16],
+      [-4, -6, 0, 0, 0]
+      ]
+    simplex = Simplex.new(tableau, precision: 0.01, max_cycles: 10)
+    
+    expect(simplex.max_cycles).to eq 10
+    expect(simplex.precision).to eq 0.01
+  end
 
 end
