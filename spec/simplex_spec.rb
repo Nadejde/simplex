@@ -247,21 +247,73 @@ describe Simplex do
       [ 0.0,  0.0,   0.0,    0.0,   0.0,  1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1.0,  0.0,  1.0],
       [-1.0, -1.0,  -1.0,   -1.0,  -1.0, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0,  0.0],
       ]
-    simplex = Simplex.new(tableau)
+    simplex = Simplex.new(tableau, precision:0.0001)
     
-    expect(simplex.solution).to eq([-8.34, 1.81, 4.43, 0.5, 0.1, 0.5, 1.0] )
+    simplex.solution
+    puts simplex.basic_solution.to_s
+    puts simplex.old_basic_solution.to_s
+    puts simplex.count
+    puts simplex.exit_condition?
+    
+    
+    #expect(simplex.solution).to eq([-8.34, 1.81, 4.43, 0.5, 0.1, 0.5, 1.0] )
   end
   
   it 'should take block for settings' do
-    tableau = [
-      [2, -2, 1, 0, 6],
-      [4, 0, 0, 1, 16],
-      [-4, -6, 0, 0, 0]
-      ]
-    simplex = Simplex.new(tableau, precision: 0.01, max_cycles: 10)
+    simplex = Simplex.new(@initial_tableau, precision: 0.01, max_cycles: 10)
     
     expect(simplex.max_cycles).to eq 10
     expect(simplex.precision).to eq 0.01
   end
 
+  it 'should save old basic solution before pivot' do
+    simplex = Simplex.new(@initial_tableau, precision: 0.01, max_cycles: 10)
+    basic_solution = simplex.basic_solution
+    simplex.pivot
+    
+    expect(simplex.old_basic_solution).to eq [0, 0, 0, 40.0, -10.0, -10.0, 0.0]
+  end
+  
+  it 'should calculate gap between old and new solution' do
+    simplex = Simplex.new(@initial_tableau, precision: 0.01, max_cycles: 10)
+    simplex.pivot
+    
+    expect(simplex.basic_solution_gap).to eq 10
+  end
+  
+  it 'should return :max_cycles when hitting cycles exit condition' do
+    simplex = Simplex.new(@initial_tableau, precision: 0.01, max_cycles: 3)
+    simplex.solution
+    
+    expect(simplex.exit_condition?).to eq :max_cycles
+  end
+  
+  it 'should return :precision when hitting precision exit condition' do
+    tableau = [
+      [ 4.1,  7.7,  12.6,    5.4,   7.7,  3.7, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 27.1],
+      [ 1.8,  7.7,   2.1,    2.2,   0.5,  9.3,  0.0, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 48.2],
+      [16.5,  0.0,   7.5,   14.0,  15.7,  0.6,  0.0,  0.0, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, 43.5],
+      [94.0, 39.1, 418.5, 1075.3, 101.5, 14.5,  0.0,  0.0,  0.0, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0],
+      [ 1.0,  0.0,   0.0,    0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.5],
+      [ 0.0,  1.0,   0.0,    0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.5],
+      [ 0.0,  0.0,   1.0,    0.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.5],
+      [ 0.0,  0.0,   0.0,    1.0,   0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0,  0.0,  0.0,  0.0,  0.0,  0.1],
+      [ 0.0,  0.0,   0.0,    0.0,   1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0,  0.0,  0.0,  0.0,  0.5],
+      [ 0.0,  0.0,   0.0,    0.0,   0.0,  1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0,  0.0,  0.0,  0.5],
+      [ 0.0,  0.0,   0.0,    0.0,   0.0,  1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1.0,  0.0,  1.0],
+      [-1.0, -1.0,  -1.0,   -1.0,  -1.0, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0,  0.0],
+      ]
+      
+    simplex = Simplex.new(tableau, precision: 0.0001, max_cycles: 1000)
+    simplex.solution
+    
+    expect(simplex.exit_condition?).to eq :precision
+  end
+  
+  it 'should have exit_condition? return fasey if solution found' do
+    simplex = Simplex.new(@initial_tableau, precision: 0.01, max_cycles: 10)
+    simplex.solution
+    
+    expect(simplex.exit_condition?).to be_falsey
+  end
 end

@@ -5,15 +5,42 @@ class Simplex
   attr_accessor :max_cycles
   attr_accessor :count
   attr_accessor :precision
+  attr_accessor :old_basic_solution
+  
+  MAX_PRECISION_COUNT = 100
   
   def initialize(initial_tableau, max_cycles: 10000, precision: 0.01)
     @tableau = Matrix.rows(initial_tableau).map { |v| Float( v ) }
     @max_cycles = max_cycles
     @precision = precision
+    @count = 0
+    @precision_count = 0
     
     basic_solution #figure out first basic solution
+    
   end
     
+  def basic_solution_gap
+      return basic_solution.map(&:abs).max if @old_basic_solution.nil?
+      gap = 0
+      basic_solution.each_with_index do |value, index|
+         gap = (value - @old_basic_solution[index]).abs > gap ?
+               (value - @old_basic_solution[index]).abs : gap 
+      end
+      gap
+  end
+  
+  def exit_condition?
+    return :max_cycles if @count == @max_cycles
+    if basic_solution_gap <= @precision
+      @precision_count += 1
+      return :precision if @precision_count > MAX_PRECISION_COUNT
+    else
+      @precision_count = 0
+    end
+    return nil
+  end
+  
   def basic_solution 
     @basic_solution = []
     
@@ -100,11 +127,13 @@ class Simplex
   end
   
   def pivot
+    @old_basic_solution = basic_solution
     new_tableau = []
     row_index = pivot_row_index
     
     return nil if row_index.nil? #if no row index return now with no solution
     
+    @count += 1 #update steps count
     column_index = pivot_column_index
     
     @tableau.row_vectors.each_with_index do |row,i|
@@ -126,11 +155,8 @@ class Simplex
   end
   
   def solution
-    @count = 0
-    until feasible_solution?
+    until feasible_solution? || exit_condition?
       return nil if pivot.nil?
-      @count += 1
-      break if count > @max_cycles
     end
     
     @basic_solution.rotate(-1)[0..variable_count].map { |v| v.round(2) }
