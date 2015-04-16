@@ -247,16 +247,9 @@ describe Simplex do
       [ 0.0,  0.0,   0.0,    0.0,   0.0,  1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  1.0,  0.0,  1.0],
       [-1.0, -1.0,  -1.0,   -1.0,  -1.0, -1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0,  0.0],
       ]
-    simplex = Simplex.new(tableau, precision:0.0001)
+    simplex = Simplex.new(tableau, precision:0.01)
     
-    simplex.solution
-    puts simplex.basic_solution.to_s
-    puts simplex.old_basic_solution.to_s
-    puts simplex.count
-    puts simplex.exit_condition?
-    
-    
-    #expect(simplex.solution).to eq([-8.34, 1.81, 4.43, 0.5, 0.1, 0.5, 1.0] )
+    expect(simplex.solution).to eq([-8.34, 1.81, 4.43, 0.5, 0.1, 0.5, 1.0] )
   end
   
   it 'should take block for settings' do
