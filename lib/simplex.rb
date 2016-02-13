@@ -32,7 +32,7 @@ class Simplex
   
   def exit_condition?
     return :max_cycles if @count == @max_cycles
-    if basic_solution_gap <= @precision
+    if basic_solution_gap < @precision
       @precision_count += 1
       return :precision if @precision_count > MAX_PRECISION_COUNT
     else
